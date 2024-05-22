@@ -22,13 +22,10 @@ export async function getAppointments(userId: string) {
         agenda,
         dentists (
           name
-          schedule
         )
       `
       )
       .eq("user_id", userId);
-
-    console.log({ appointments, error });
 
     if (error) {
       return error;
