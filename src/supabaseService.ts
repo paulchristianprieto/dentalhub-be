@@ -8,13 +8,27 @@ const publicKey = process.env.PUBLIC_KEY || "";
 const supabase = createClient(projectUrl, publicKey);
 
 export async function getAppointments(userId: string) {
-  
   try {
     let { data: appointments, error } = await supabase
       .from("appointments")
-      .select("*")
+      .select(
+        `
+        id,
+        user_id,
+        contact_number,
+        date,
+        start_time,
+        end_time,
+        agenda,
+        dentists (
+          name
+          schedule
+        )
+      `
+      )
       .eq("user_id", userId);
 
+    console.log({ appointments, error });
 
     if (error) {
       return error;
