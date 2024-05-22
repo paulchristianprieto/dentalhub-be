@@ -7,11 +7,14 @@ const publicKey = process.env.PUBLIC_KEY || "";
 
 const supabase = createClient(projectUrl, publicKey);
 
-export async function getAppointments() {
+export async function getAppointments(userId: string) {
+  
   try {
     let { data: appointments, error } = await supabase
       .from("appointments")
-      .select("*");
+      .select("*")
+      .eq("user_id", userId);
+
 
     if (error) {
       return error;
@@ -37,6 +40,7 @@ export async function createAppointment(data: CreateAppointmentSchema) {
           date: data?.date,
           start_time: data?.startTime,
           end_time: data?.endTime,
+          dentist_id: data?.dentistId,
         },
       ])
       .select();

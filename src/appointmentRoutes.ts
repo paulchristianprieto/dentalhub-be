@@ -12,11 +12,12 @@ const createAppointmentSchema = Joi.object({
   startTime: Joi.string(),
   endTime: Joi.string(),
   agenda: Joi.string(),
+  dentistId: Joi.string(),
 });
 
-// CRUD
 router.get("/", async (req: Request, res: Response) => {
-  const data = await getAppointments();
+  const { userId } = req.body;
+  const data = await getAppointments(userId);
   res.send(data);
 });
 

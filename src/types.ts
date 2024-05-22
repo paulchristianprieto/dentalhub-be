@@ -5,4 +5,5 @@ export interface CreateAppointmentSchema {
   startTime: string;
   endTime: string;
   agenda: string;
+  dentistId: string;
 }
