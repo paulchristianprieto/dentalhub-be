@@ -1,5 +1,11 @@
 import express, { Request, Response } from "express";
-import { createAppointment, getAppointments } from "./supabaseService";
+import {
+  createAppointment,
+  deleteAppointment,
+  getAppointment,
+  getAppointments,
+  updateAppointment,
+} from "./supabaseService";
 import Joi from "joi";
 import { upload } from "./middlewares/multer";
 
@@ -16,9 +22,36 @@ const createAppointmentSchema = Joi.object({
 });
 
 router.get("/", async (req: Request, res: Response) => {
-  const { userId } = req.body;
+  const { userId, id } = req.body;
+
+  if (id) {
+    const data = await getAppointment(id);
+    res.send(data);
+
+    return;
+  }
+
   const data = await getAppointments(userId);
   res.send(data);
+});
+
+router.put("/", async (req: Request, res: Response) => {
+  const updatedData = req.body;
+
+  const data = await updateAppointment(updatedData);
+  res.send(data);
+});
+
+router.delete("/:id", async (req: Request, res: Response) => {
+  const appointmentId = req.params.id;
+
+  try {
+    const data = await deleteAppointment(appointmentId);
+    res.status(200).send(data);
+  } catch (error) {
+    console.error("Error deleting appointment:", error);
+    res.status(500).send({ error: "Failed to delete appointment" });
+  }
 });
 
 router.post("/", async (req: Request, res: Response) => {
